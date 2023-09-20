@@ -1,60 +1,63 @@
 #include <iostream>
-
+#include <queue>
+#include <vector>
 using namespace std;
 
-struct Point {
-    double x;
-    double y;
-};
+const int MAXN = 1000;
+int n, s, t;
+int c[MAXN][MAXN], f[MAXN][MAXN], p[MAXN];
 
-bool isClockwise(Point p1, Point p2, Point q) {
-    // Calculate vectors P1P2 and P1q
-    double vectorP1P2_x = p2.x - p1.x;
-    double vectorP1P2_y = p2.y - p1.y;
-    double vectorP1q_x = q.x - p1.x;
-    double vectorP1q_y = q.y - p1.y;
-    
-    // Calculate cross product of vectors
-    double crossProduct = vectorP1P2_x * vectorP1q_y - vectorP1P2_y * 
-vectorP1q_x;
-    
-    // Check the sign of the cross product
-    if (crossProduct < 0) {
-        return true; // q is in the clockwise direction from P1P2
+int augment() {
+    memset(p, -1, sizeof(p)); // initialize parent array
+    queue<int> q;
+    q.push(s);
+    p[s] = -2;
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        for (int v = 0; v < n; v++) {
+            if (p[v] == -1 && c[u][v] - f[u][v] > 0) { // if v is not visited and there is residual capacity
+                p[v] = u;
+                q.push(v);
+            }
+        }
     }
-    else {
-        return false; // q is not in the clockwise direction from P1P2
+    if (p[t] == -1) return 0; // if there is no augmenting path, terminate
+    int cf = INT_MAX;
+    for (int v = t; v != s; v = p[v]) {
+        int u = p[v];
+        cf = min(cf, c[u][v] - f[u][v]); // find the minimum residual capacity
     }
+    for (int v = t; v != s; v = p[v]) {
+        int u = p[v];
+        f[u][v] += cf; // update the flow
+        f[v][u] -= cf; // update the reverse flow
+    }
+    return cf;
+}
+
+int maxflow() {
+    int flow = 0;
+    while (int cf = augment()) { // repeatedly find augmenting paths
+        flow += cf; // add flow from the latest augmenting path
+    }
+    return flow;
 }
 
 int main() {
-    Point p1 = {0, 0}; // Endpoint 1
-    Point p2 = {10, 10}; // Endpoint 2
-    Point q1 = {5, 0}; // Point in the clockwise direction
-    Point q2 = {5, 5}; // Point collinear with P1P2
-    Point q3 = {0, 5}; // Point in the counter-clockwise direction
-    
-    if (isClockwise(p1, p2, q1)) {
-        cout << "q1 is in the clockwise direction from P1P2" << endl;
+    cin >> n;
+    cin >> s >> t;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> c[i][j]; // read the capacity matrix
+        }
     }
-    else {
-        cout << "q1 is not in the clockwise direction from P1P2" << endl;
+    int max_flow = maxflow();
+    cout << "Maximum flow: " << max_flow << endl;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << "f(" << i << "," << j << ") = " << f[i][j] << endl; // print the flow matrix
+        }
     }
-    
-    if (isClockwise(p1, p2, q2)) {
-        cout << "q2 is in the clockwise direction from P1P2" << endl;
-    }
-    else {
-        cout << "q2 is not in the clockwise direction from P1P2" << endl;
-    }
-    
-    if (isClockwise(p1, p2, q3)) {
-        cout << "q3 is in the clockwise direction from P1P2" << endl;
-    }
-    else {
-        cout << "q3 is not in the clockwise direction from P1P2" << endl;
-    }
-    
     return 0;
 }
-

@@ -1,40 +1,62 @@
 #include <iostream>
-#include <cmath>
-
+#include <queue>
 using namespace std;
 
-struct Point {
-    double x;
-    double y;
-};
+const int MAX_SIZE = 100;
 
-double calculateSlope(Point p1, Point p2) {
-    if (p1.x == p2.x) {
-        return INFINITY;
-    }
-    return (p2.y - p1.y) / (p2.x - p1.x);
-}
+int adj[MAX_SIZE][MAX_SIZE]; // adjacency matrix
+bool visited[MAX_SIZE];
+int parent[MAX_SIZE];
 
-bool areParallel(Point p1, Point p2, Point p3, Point p4) {
-    double m1 = calculateSlope(p1, p2);
-    double m2 = calculateSlope(p3, p4);
+void bfs(int u, int v) {
+    queue<int> Q;
+    Q.push(u);
+    visited[u] = true;
+    parent[u] = -1;
     
-    return m1 == m2;
+    while (!Q.empty()) {
+        int curr = Q.front();
+        Q.pop();
+        
+        for (int i = 0; i < MAX_SIZE; i++) {
+            if (adj[curr][i] == 1 && !visited[i]) {
+                visited[i] = true;
+                parent[i] = curr;
+                Q.push(i);
+                
+                if (i == v) {
+                    // path from u to v has been found
+                    cout << "Path from " << u << " to " << v << ": ";
+                    int node = v;
+                    while (node != -1) {
+                        cout << node << " ";
+                        node = parent[node];
+                    }
+                    cout << endl;
+                    return;
+                }
+            }
+        }
+    }
+    
+    cout << "No path found from " << u << " to " << v << endl;
 }
 
 int main() {
-    Point p1 = {1, 2};
-    Point p2 = {3, 4};
-    Point p3 = {5, 6};
-    Point p4 = {7, 8};
+    // Sample adjacency matrix
+    adj[1][2] = adj[2][1] = 1;
+    adj[1][3] = adj[3][1] = 1;
+    adj[1][4] = adj[4][1] = 1;
+    adj[2][5] = adj[5][2] = 1;
+    adj[2][6] = adj[6][2] = 1;
+    adj[3][6] = adj[6][3] = 1;
+    adj[3][7] = adj[7][3] = 1;
+    adj[4][7] = adj[7][4] = 1;
+    adj[5][7] = adj[7][5] = 1;
+    adj[6][7] = adj[7][6] = 1;
     
-    if (areParallel(p1, p2, p3, p4)) {
-        cout << "Line segments are parallel." << endl;
-    }
-    else {
-        cout << "Line segments are not parallel." << endl;
-    }
+    // Find path from vertex 1 to 7
+    bfs(1, 7);
     
     return 0;
 }
-
