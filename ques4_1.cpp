@@ -1,47 +1,47 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include<ctime>
+
 using namespace std;
 
-vector<int> MAXIMUM_VALUE_MINIMAL_SUBARRAY(vector<int> A) {
-    int maxSum = 0;
-    int start = 0;
-    int end = 0;
-    int minLength = A.size();
+struct Activity {
+    int start, finish;
+};
 
-    for (int i = 0; i < A.size(); i++) {
-        int sum = 0;
-        int j = i;
-        while (j < A.size() && A[j] >= 0) {
-            sum = sum + A[j];
-            if (sum >= maxSum || (sum == maxSum && j - i + 1 < minLength)) {
-                maxSum = sum;
-                start = i;
-                end = j;
-                minLength = j - i + 1;
-            }
-            j = j + 1;
-        }
-    }
-
-    vector<int> result(A.begin() + start, A.begin() + end + 1);
-    return result;
+bool cmp(Activity a, Activity b) {
+    return a.finish < b.finish;
 }
 
 int main() {
-    vector<int> A;
-    A.push_back(1);
-    A.push_back(2);
-    A.push_back(3);
-    A.push_back(4);
-    A.push_back(5);
-    vector<int> result = MAXIMUM_VALUE_MINIMAL_SUBARRAY(A);
-    cout << "The maximum value minimal subarray is: [";
-    for (int i = 0; i < result.size(); i++) {
-        cout << result[i];
-        if (i != result.size() - 1) {
-            cout << ", ";
+    int n;
+    cin >> n;
+
+    vector<Activity> activities(n);
+    for (int i = 0; i < n; i++) {
+        cin >> activities[i].start >> activities[i].finish;
+    }
+    clock_t tStart = clock();
+
+    sort(activities.begin(), activities.end(), cmp);
+
+    vector<int> dp(n);
+    dp[0] = 1;
+
+    for (int i = 1; i < n; i++) {
+        dp[i] = 1;
+        for (int j = 0; j < i; j++) {
+            if (activities[j].finish <= activities[i].start) {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
         }
     }
-    cout << "]" << endl;
+
+    int maxActivities = *max_element(dp.begin(), dp.end());
+
+    cout << "Maximum number of activities that can be scheduled is " << maxActivities << endl;
+    double time1=(double)(clock() - tStart)/CLOCKS_PER_SEC;
+        cout<<"Time taken is "<<time1<<endl;
     return 0;
 }
+

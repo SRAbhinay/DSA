@@ -1,49 +1,48 @@
 #include <iostream>
 #include <vector>
-#include <climits>
+#include <algorithm>
+#include<ctime>
+
 using namespace std;
 
-vector<int> MINIMUM_VALUE_MINIMAL_SUBARRAY(vector<int> A) {
-    int minSum = INT_MAX;
-    int start = 0;
-    int end = 0;
-    int minLength = A.size();
+struct Activity {
+    int start, finish;
+};
 
-    for (int i = 0; i < A.size(); i++) {
-        int sum = 0;
-        int j = i;
-        while (j < A.size()) {
-            sum = sum + A[j];
-            if (sum < minSum || (sum == minSum && j - i + 1 < minLength)) {
-                minSum = sum;
-                start = i;
-                end = j;
-                minLength = j - i + 1;
-            }
-            j = j + 1;
-        }
-    }
-
-    vector<int> result(A.begin() + start, A.begin() + end + 1);
-    return result;
+bool cmp(Activity a, Activity b) {
+    return a.finish < b.finish;
 }
 
 int main() {
-    vector<int> A;
-A.push_back(1);
-A.push_back(2);
-A.push_back(3);
-A.push_back(4);
-A.push_back(5);
-
-    vector<int> result = MINIMUM_VALUE_MINIMAL_SUBARRAY(A);
-    cout << "The minimum value minimal subarray is: [";
-    for (int i = 0; i < result.size(); i++) {
-        cout << result[i];
-        if (i != result.size() - 1) {
-            cout << ", ";
-        }
+    int n;
+    cout << "Enter the number of activities: ";
+    cin >> n;
+    
+    vector<Activity> activities(n);
+    cout << "Enter the start and finish time of each activity:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> activities[i].start >> activities[i].finish;
     }
-    cout << "]" << endl;
+    clock_t tStart = clock();
+    sort(activities.begin(), activities.end(), cmp);
+    
+    vector<int> assignedHalls;
+    for (int i = 0; i < n; i++) {
+        int j = 0;
+        while (j < assignedHalls.size() && activities[i].start >= assignedHalls[j]) {
+            j++;
+        }
+        if (j == assignedHalls.size()) {
+            assignedHalls.push_back(activities[i].finish);
+        } else {
+            assignedHalls[j] = activities[i].finish;
+        }
+        cout << "Activity " << i+1 << " assigned to hall " << j+1 << endl;
+    }
+    
+    cout << "Minimum number of halls required: " << assignedHalls.size() << endl;
+    double time1=(double)(clock() - tStart)/CLOCKS_PER_SEC;
+        cout<<"Time taken is "<<time1<<endl;
     return 0;
 }
+

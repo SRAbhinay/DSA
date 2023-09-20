@@ -1,46 +1,39 @@
-#include <vector>
 #include <iostream>
+#include <vector>
+#include <algorithm> // for sort() and lower_bound()
 
 using namespace std;
 
-vector<int> maximumValueMaximalSubarray(vector<int>& A) {
-    int maxSum = 0, start = 0, end = 0, minLength = A.size();
-    for (int i = 0; i < A.size(); i++) {
-        int sum = 0;
-        int j = i;
-        while (j < A.size() && A[j] >= 0) {
-            sum += A[j];
-            if (sum > maxSum || (sum == maxSum && (j - i + 1) < 
-minLength)) {
-                maxSum = sum;
-                start = i;
-                end = j;
-                minLength = j - i + 1;
-            }
-            j++;
-        }
-    }
-    vector<int> subarray(A.begin() + start, A.begin() + end + 1);
-    return subarray;
+struct Activity {
+    int start, finish;
+};
+
+bool cmp(Activity a, Activity b) {
+    return a.finish < b.finish;
 }
 
 int main() {
-    vector<int> A;
-A.push_back(1);
-A.push_back(2);
-A.push_back(3);
-A.push_back(4);
-A.push_back(5);
+    int n; // number of activities
+    cin >> n;
 
-    vector<int> result = maximumValueMaximalSubarray(A);
-    cout << "The maximum value maximal subarray is: [";
-    for (int i = 0; i < result.size(); i++) {
-        cout << result[i];
-        if (i < result.size() - 1) {
-            cout << ", ";
-        }
+    vector<Activity> activities(n);
+    for (int i = 0; i < n; i++) {
+        cin >> activities[i].start >> activities[i].finish;
     }
-    cout << "]" << endl;
+
+    sort(activities.begin(), activities.end(), cmp);
+
+    vector<int> assignedHalls;
+    for (int i = 0; i < n; i++) {
+        int j = lower_bound(assignedHalls.begin(), assignedHalls.end(), activities[i].start) - assignedHalls.begin();
+        if (j < assignedHalls.size()) {
+            assignedHalls[j] = activities[i].finish;
+        } else {
+            assignedHalls.push_back(activities[i].finish);
+        }
+        cout << "Activity " << i+1 << " assigned to hall " << j+1 << endl;
+    }
+
     return 0;
 }
 

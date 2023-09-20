@@ -1,66 +1,50 @@
 #include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
-struct Complex {
-  double real;
-  double imag;
+struct Activity {
+    int start, finish;
 };
 
-Complex add(Complex a, Complex b) {
-  Complex result;
-  result.real = a.real + b.real;
-  result.imag = a.imag + b.imag;
-  return result;
+bool activityCompare(const Activity& a, const Activity& b) {
+    return a.finish < b.finish;
 }
 
-Complex subtract(Complex a, Complex b) {
-  Complex result;
-  result.real = a.real - b.real;
-  result.imag = a.imag - b.imag;
-  return result;
-}
+vector<Activity> selectActivities(vector<Activity> activities) {
+    // sort the activities by finish time
+    sort(activities.begin(), activities.end(), activityCompare);
 
-Complex multiply(Complex a, Complex b) {
-  Complex result;
-  result.real = a.real * b.real - a.imag * b.imag;
-  result.imag = a.real * b.imag + a.imag * b.real;
-  return result;
-}
+    vector<Activity> selected;
+    selected.push_back(activities[0]);
 
-Complex divideByTwo(Complex a) {
-  Complex result;
-  result.real = a.real / 2;
-  result.imag = a.imag / 2;
-  return result;
-}
+    for (int i = 1; i < activities.size(); i++) {
+        if (activities[i].start >= selected.back().finish) {
+            selected.push_back(activities[i]);
+        }
+    }
 
-Complex dccMultiply(Complex a, Complex b) {
-  Complex a_plus_b = add(a, b);
-  Complex a_minus_b = subtract(a, b);
-  
-  Complex a_plus_b_half = divideByTwo(a_plus_b);
-  Complex a_minus_b_half = divideByTwo(a_minus_b);
-  a_minus_b_half.imag = -a_minus_b_half.imag;
-  
-  Complex result1 = multiply(a_plus_b_half, b);
-  Complex result2 = multiply(a_minus_b_half, b);
-  
-  return add(result1, result2);
+    return selected;
 }
 
 int main() {
-  Complex a, b;
-  cout << "Enter real part of first complex number: ";
-  cin >> a.real;
-  cout << "Enter imaginary part of first complex number: ";
-  cin >> a.imag;
-  cout << "Enter real part of second complex number: ";
-  cin >> b.real;
-  cout << "Enter imaginary part of second complex number: ";
-  cin >> b.imag;
-  
-  Complex result = dccMultiply(a, b);
-  cout << "Result: " << result.real << " + " << result.imag << "i" << endl;
-  
-  return 0;
+    vector<Activity> activities = {{1, 4}, {3, 5}, {0, 6}, {5, 7}, {3, 9}, 
+{5, 9},
+                                   {6, 10}, {8, 11}, {8, 12}, {2, 14}, 
+{12, 16}};
+    vector<Activity> selected = selectActivities(activities);
+
+    cout << "Selected activities: ";
+    for (int i = 0; i < selected.size(); i++) {
+        cout << "(" << selected[i].start << ", " << selected[i].finish << 
+")";
+        if (i != selected.size() - 1) {
+            cout << ", ";
+        }
+    }
+    cout << endl;
+
+    return 0;
 }
+
