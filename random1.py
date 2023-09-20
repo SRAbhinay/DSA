@@ -5,7 +5,7 @@ Created on Tue Jan  4 21:32:01 2022
 @author: janaki
 """
 import random
-n = 10
+n = 90000
 
 fp = open("random_"+str(n)+".txt","w")
 fp.write(str(n)+" ")  
