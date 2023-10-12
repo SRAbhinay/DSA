@@ -5,8 +5,6 @@
 """
 Created on Tue Jan  4 21:30:54 2022
 @author: janaki
-"""
-
 n=150000
 fp = open("descending_"+str(n)+".txt","w")
 fp.write(str(n)+" ")  
