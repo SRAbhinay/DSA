@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <vector>
 
@@ -22,7 +21,7 @@ int countInversions(vector<int> &A) {
 int main() {
     vector<int> elements;
     int key,i,j,n,ele;
-    //cout<<"Enter number of elements";
+    cout<<"Enter number of elements";
     cin>>n;
     for(i=0;i<n;i++)
 {
