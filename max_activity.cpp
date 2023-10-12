@@ -26,8 +26,7 @@ int maxActivityValue(vector<Activity>& activities) {
         while (j >= 0 && activities[j].finish > activities[i].start) {
             j--;
         }
-
-        // Compute the maximum value achievable up to activity i
+        
         if (j >= 0) {
             dp[i] = max(dp[i-1], dp[j] + activities[i].value);
         } else {
