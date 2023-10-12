@@ -6,7 +6,7 @@ int main()
 {
     vector<int> elements;
     int key,i,j,n,ele;
-    //cout<<"Enter number of elements";
+    cout<<"Enter number of elements";
     cin>>n;
     for(i=0;i<n;i++)
 {
@@ -29,8 +29,8 @@ int main()
     }
 double time1=(double)(clock() - tStart)/CLOCKS_PER_SEC;
 	cout<<"Time taken is "<<time1<<endl;
-   /*for(i=0;i<n;i++)
+   for(i=0;i<n;i++)
     {
         cout<<elements[i]<<" ";
-    }*/
+    }
 }
