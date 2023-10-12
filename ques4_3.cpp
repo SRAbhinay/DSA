@@ -4,6 +4,7 @@
 using namespace std;
 
 vector<int> MINIMUM_VALUE_MAXIMAL_SUBARRAY(vector<int> A) {
+   
     int minSum = INT_MAX;
     int start = 0;
     int end = 0;
@@ -12,8 +13,10 @@ vector<int> MINIMUM_VALUE_MAXIMAL_SUBARRAY(vector<int> A) {
     for (int i = 0; i < A.size(); i++) {
         int sum = 0;
         int j = i;
+        
         while (j < A.size()) {
             sum = sum + A[j];
+            
             if (sum < minSum || (sum == minSum && j - i + 1 > maxLength)) {
                 minSum = sum;
                 start = i;
