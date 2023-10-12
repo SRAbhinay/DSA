@@ -1,6 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
+
 void merge(vector<int> &A, int start, int mid, int end)
+
 {
 	int nL = mid - start + 1;
 	int nR = end - mid;
@@ -27,6 +29,7 @@ void merge(vector<int> &A, int start, int mid, int end)
 		}
 	}
 }
+
 void mergeSortLeft2(vector<int> &A, int start, int end)
 {
 	if ( start == end )
