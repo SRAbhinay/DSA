@@ -55,7 +55,7 @@ int main()
 	double t=(double)(clock() - tStart) / CLOCKS_PER_SEC;
 	cout << "Time taken (in seconds) : " << t << endl;
 	
-	//for( auto i = 0; i < n; i++ )
+	for( auto i = 0; i < n; i++ )
 		//cout << A[i] << ", ";
         
 	return 0;
