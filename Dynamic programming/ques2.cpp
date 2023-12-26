@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 using namespace std;
+
 int knapsack(int W, vector<int>& wt, vector<int>& val, int n) {
     vector<vector<int>> dp(n+1, vector<int>(W+1));
 
