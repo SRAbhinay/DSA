@@ -5,7 +5,7 @@ using namespace std;
 
 int LIS(vector<int>& sequence) {
     int n = sequence.size();
-    vector<int> LIS_lengths(n, 1);  // Initialize LIS_lengths to 1 for all ind
+    vector<int> LIS_lengths(n, 1);  // Initialize LIS_lengths to 1 for all in
     for (int i = 1; i < n; i++) {
         for (int j = 0; j < i; j++) {
             if (sequence[j] < sequence[i]) {
