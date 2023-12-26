@@ -20,6 +20,7 @@ int knapsack(int W, vector<int>& wt, vector<int>& val, int n) {
     }
     return dp[n][W];
 }
+
 int main() {
     int W = 50;
     vector<int> wt = {10, 20, 30};
